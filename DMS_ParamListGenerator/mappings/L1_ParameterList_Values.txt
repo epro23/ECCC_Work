@@ -1,0 +1,70 @@
+Air - Physical
+Biological - Biological
+Biological - Hydrocarbons
+Biological - Metal
+Biological - Pesticides
+Biological - Physical
+Biological - Surrogate
+Sediment - Antineoplastic agent
+Sediment - Anti-Parasitic Drug
+Sediment - Biological
+Sediment - Carbon
+Sediment - Chlorinated paraffins
+Sediment - Descriptive
+Sediment - Dioxins and Furans
+Sediment - Hydrocarbons
+Sediment - Immunosuppressive drug
+Sediment - Major Ions
+Sediment - Metal
+Sediment - Neonicotinoid
+Sediment - Nonmetals
+Sediment - Nutrients
+Sediment - Organophosphate flame retardant
+Sediment - Organosilicone
+Sediment - Pesticides
+Sediment - Pharmaceutical
+Sediment - Physical
+Sediment - Radiocontrast agent
+Sediment - Radionuclides
+Sediment - Substituted Diphenylamine Antioxidants (sDPA)
+Sediment - Sulphur
+Sediment - Surrogate
+Sediment - Time
+Sediment - Tricyclical Alkaloid
+Semi-Permeable Membrane Device - Hydrocarbons
+Semi-Permeable Membrane Device - Pharmaceutical
+Semi-Permeable Membrane Device - Surrogate
+Water - Antineoplastic agent
+Water - Biological
+Water - Brominated compounds
+Water - Carbamate
+Water - Carbon
+Water - Carbonated compounds
+Water - Chlorinated paraffins
+Water - Descriptive
+Water - Dioxins and Furans
+Water - Hydrocarbons
+Water - Immunosuppressive drug
+Water - Lab
+Water - Major Ions
+Water - Metal
+Water - Neonicotinoid
+Water - Nonmetals
+Water - Nutrients
+Water - Organophosphate flame retardant
+Water - Oxygen
+Water - Pesticides
+Water - Pharmaceutical
+Water - Physical
+Water - Radiocontrast agent
+Water - Radionuclides
+Water - Sulfonyl urea
+Water - Sulphur
+Water - Surrogate
+Water - Thiocyanates
+Water - Tricyclical Alkaloid
+XAD resin - Descriptive
+XAD resin - Hydrocarbons
+XAD resin - Organophosphate flame retardant
+XAD resin - Pesticides
+XAD resin - Surrogate
