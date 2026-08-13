@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  'AgentPool_VMSSUbuntu'
 
 steps:
 - task: UsePythonVersion@0
@@ -17,4 +17,3 @@ steps:
 
 - script: python DMS_ParamListGenerator/working.py
   displayName: 'Run Python Script'
-
