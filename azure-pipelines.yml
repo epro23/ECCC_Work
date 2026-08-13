@@ -22,5 +22,6 @@ steps:
   displayName: 'Install dependencies and run script'
 
 - script:
+    cat 'pipeline_test.txt'
     cat 'pipeline_test_output.csv'
   displayName: 'Showing file contents'
