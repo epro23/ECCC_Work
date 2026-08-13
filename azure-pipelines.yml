@@ -24,5 +24,4 @@ steps:
 - script:
     cd DMS_ParamListGenerator
     cat 'pipeline_test.txt'
-    cat 'pipeline_test_output.csv'
   displayName: 'Showing file contents'
