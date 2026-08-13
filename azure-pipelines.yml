@@ -18,7 +18,7 @@ jobs:
               --account-name ecdcncisst `
               --container-name ethan-resources `
               --name pipeline_test.txt `
-              --file $(System.DefaultWorkingDirectory)\pipeline_test.txt`
+              --file $(System.DefaultWorkingDirectory)\pipeline_test.txt `
 
             cat "pipeline_test.txt"
 
