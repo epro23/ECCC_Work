@@ -4,6 +4,10 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  file_name: ''
+  is_star: ''
+
 steps:
 - task: UsePythonVersion@0
   inputs:
@@ -13,8 +17,5 @@ steps:
 - script: |
     python -m pip install --upgrade pip
     pip install -r DMS_ParamListGenerator/requirements.txt
-    python DMS_ParamListGenerator/working.py
-    displayName: 'Install dependencies and run script'
-
-- script: python DMS_ParamListGenerator/working.py
-  displayName: 'Run Python Script'
+    python DMS_ParamListGenerator/working_pipeline.py "$(file_name)" "$(is_star)"
+  displayName: 'Install dependencies and run script'
