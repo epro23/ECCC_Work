@@ -5,8 +5,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  file_name: 'abc.csv'
-  is_star: 'True'
+  file_name: 'pipeline_test.txt'
+  is_star: 'no'
 
 steps:
 - task: UsePythonVersion@0
