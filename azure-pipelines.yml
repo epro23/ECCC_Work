@@ -5,8 +5,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  file_name: ''
-  is_star: ''
+  file_name: 'abc.csv'
+  is_star: 'True'
 
 steps:
 - task: UsePythonVersion@0
