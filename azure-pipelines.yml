@@ -1,5 +1,4 @@
-trigger:
-- None
+trigger: none
 
 pool:
   # 'AgentPool_VmssUbuntu'
@@ -16,6 +15,7 @@ steps:
   displayName: 'Set up Python 3.13.14'
 
 - script: |
+    cd DMS_ParamListGenerator
     python -m pip install --upgrade pip
     pip install -r requirements.txt
     python working_pipeline.py "$(file_name)" "$(is_star)"
