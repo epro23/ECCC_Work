@@ -1,8 +1,8 @@
 trigger:
-- main
+- None
 
 pool:
-  vmImage: 'ubuntu-latest'
+  'AgentPool_VmssUbuntu'
 
 variables:
   file_name: ''
