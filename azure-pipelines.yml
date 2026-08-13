@@ -21,10 +21,10 @@ jobs:
               --name pipeline_test.txt `
               --file $(System.DefaultWorkingDirectory)\pipeline_test.txt `
 
-            #cat "pipeline_test.txt"
+            cat "$(System.DefaultWorkingDirectory)\pipeline_test.txt"
 
     variables:
-      file_name: 'pipeline_test.txt' #change to demand user input
+      file_name: ' $(System.DefaultWorkingDirectory)\pipeline_test.txt' #change to demand user input
       is_star: 'no' #change to demand user input
 
   - job: setPythonVersion
