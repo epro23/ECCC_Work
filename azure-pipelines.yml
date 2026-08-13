@@ -26,7 +26,7 @@ jobs:
    
   - job: setPythonVersion
     variables:
-      file_name: ' $(System.DefaultWorkingDirectory)\pipeline_test.txt' #change to demand user input
+      file_name: "pipeline_test.txt"
       is_star: 'no' #change to demand user input
       
     dependsOn: RetrieveBlobJob
