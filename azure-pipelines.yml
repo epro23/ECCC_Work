@@ -1,8 +1,8 @@
 trigger: none
 
 pool:
-  # 'AgentPool_VmssUbuntu'
-  vmImage: 'ubuntu-latest'
+  'AgentPool_VmssUbuntu'
+  # vmImage: 'ubuntu-latest'
 
 jobs: 
   - job: RetrieveBlobJob
