@@ -12,8 +12,9 @@ steps:
 
 - script: |
     python -m pip install --upgrade pip
-    if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-  displayName: 'Install Dependencies'
+    pip install -r requirements.txt
+    python working.py
+    displayName: 'Install dependencies and run script'
 
 - script: python DMS_ParamListGenerator/working.py
   displayName: 'Run Python Script'
