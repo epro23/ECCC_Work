@@ -1,13 +1,26 @@
 trigger:
 - none
 
+parameters:
+  - name: fileName
+    displayName: 'Target file name (e.g. star_target.txt)'
+    type: string
+    default: 'pipeline_test.txt'
+
+  - name: isStar
+    displayName: 'Is this a list of STAR codes?'
+    type: string
+    default: 'no'
+    values:
+      - 'yes'
+      - 'no'
+
 pool: 'AgentPool_VmssUbuntu'
 
 variables:
-  file_name: 'pipeline_test.txt'
-  is_star: 'no'  # change to demand user input
   storage_account: 'ecdcncisst'
   storage_container: 'ethan-resources'
+  working_dir: 'DMS_ParamListGenerator'
 
 jobs:
   - job: RunParamListGenerator
@@ -22,10 +35,9 @@ jobs:
             az storage blob download \
               --account-name $(storage_account) \
               --container-name $(storage_container) \
-              --name $(file_name) \
-              --file DMS_ParamListGenerator/$(file_name)
-
-            cat "DMS_ParamListGenerator/$(file_name)"
+              --name ${{ parameters.fileName }} \
+              --file $(working_dir)/${{ parameters.fileName }}
+            cat "$(working_dir)/${{ parameters.fileName }}"
 
       - task: UsePythonVersion@0
         inputs:
@@ -33,19 +45,21 @@ jobs:
         displayName: 'Set up Python 3.13.14'
 
       - script: |
-          cd DMS_ParamListGenerator
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          python working_pipeline.py "$(file_name)" "$(is_star)"
+          python working_pipeline.py "${{ parameters.fileName }}" "${{ parameters.isStar }}"
         displayName: 'Install dependencies and run script'
+        workingDirectory: $(working_dir)
+
+      - bash: echo "##vso[task.setvariable variable=output_file]${FILE_NAME%.*}_output.csv"
+        displayName: 'Set output file name'
+        env:
+          FILE_NAME: ${{ parameters.fileName }}
 
       - script: |
-          cd DMS_ParamListGenerator
-          output_file="${FILE_NAME%.*}_output.csv"
-          python -c "import pandas as pd; print(pd.read_csv('$output_file')['Unique parameter list values'].dropna().tolist())"
+          python -c "import pandas as pd; print(pd.read_csv('$(output_file)')['Unique parameter list values'].dropna().tolist())"
         displayName: 'Showing unique parameter list values'
-        env:
-          FILE_NAME: $(file_name)
+        workingDirectory: $(working_dir)
 
       - task: AzureCLI@2
         displayName: 'Upload output back to NCIS blob storage'
@@ -53,13 +67,11 @@ jobs:
           azureSubscription: 'DevOpsServiceConnection_EcDc-NCIS-rg'
           scriptType: 'bash'
           scriptLocation: 'inlineScript'
+          workingDirectory: $(working_dir)
           inlineScript: |
-            output_file="${FILE_NAME%.*}_output.csv"
             az storage blob upload \
               --account-name $(storage_account) \
               --container-name $(storage_container) \
-              --name "$output_file" \
-              --file "DMS_ParamListGenerator/$output_file" \
+              --name "$(output_file)" \
+              --file "$(output_file)" \
               --overwrite
-        env:
-          FILE_NAME: $(file_name)
