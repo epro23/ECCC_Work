@@ -1,50 +1,65 @@
-trigger: 
+trigger:
 - none
 
-pool:
-  'AgentPool_VmssUbuntu'
-  # vmImage: 'ubuntu-latest'
+pool: 'AgentPool_VmssUbuntu'
 
-jobs: 
-  - job: RetrieveBlobJob
+variables:
+  file_name: 'pipeline_test.txt'
+  is_star: 'no'  # change to demand user input
+  storage_account: 'ecdcncisst'
+  storage_container: 'ethan-resources'
+
+jobs:
+  - job: RunParamListGenerator
     steps:
       - task: AzureCLI@2
         displayName: 'Download resource from NCIS blob storage'
         inputs:
           azureSubscription: 'DevOpsServiceConnection_EcDc-NCIS-rg'
-          scriptType: 'pscore'
+          scriptType: 'bash'
           scriptLocation: 'inlineScript'
           inlineScript: |
-            az storage blob download `
-              --account-name ecdcncisst `
-              --container-name ethan-resources `
-              --name pipeline_test.txt `
-              --file $(System.DefaultWorkingDirectory)\pipeline_test.txt `
+            az storage blob download \
+              --account-name $(storage_account) \
+              --container-name $(storage_container) \
+              --name $(file_name) \
+              --file DMS_ParamListGenerator/$(file_name)
 
-            cat "$(System.DefaultWorkingDirectory)\pipeline_test.txt"
+            cat "DMS_ParamListGenerator/$(file_name)"
 
-   
-  - job: setPythonVersion
-    variables:
-      file_name: "pipeline_test.txt"
-      is_star: 'no' #change to demand user input
-      
-    dependsOn: RetrieveBlobJob
-    steps:
-    - task: UsePythonVersion@0
-      inputs:
-        versionSpec: '3.13.14'
-      displayName: 'Set up Python 3.13.14'
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.13.14'
+        displayName: 'Set up Python 3.13.14'
 
-    - script: |
-        cd DMS_ParamListGenerator
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        python working_pipeline.py "$(file_name)" "$(is_star)"
-      displayName: 'Install dependencies and run script'
+      - script: |
+          cd DMS_ParamListGenerator
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python working_pipeline.py "$(file_name)" "$(is_star)"
+        displayName: 'Install dependencies and run script'
 
-    #change below to output unique values only
-    - script: |
-        cd DMS_ParamListGenerator
-        cat 'pipeline_test_output.csv' 
-      displayName: 'Showing file contents'
+      - script: |
+          cd DMS_ParamListGenerator
+          output_file="${FILE_NAME%.*}_output.csv"
+          python -c "import pandas as pd; print(pd.read_csv('$output_file')['Unique parameter list values'].dropna().tolist())"
+        displayName: 'Showing unique parameter list values'
+        env:
+          FILE_NAME: $(file_name)
+
+      - task: AzureCLI@2
+        displayName: 'Upload output back to NCIS blob storage'
+        inputs:
+          azureSubscription: 'DevOpsServiceConnection_EcDc-NCIS-rg'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            output_file="${FILE_NAME%.*}_output.csv"
+            az storage blob upload \
+              --account-name $(storage_account) \
+              --container-name $(storage_container) \
+              --name "$output_file" \
+              --file "DMS_ParamListGenerator/$output_file" \
+              --overwrite
+        env:
+          FILE_NAME: $(file_name)
