@@ -25,7 +25,7 @@ variables:
 
 jobs:
   - job: RunParamListGenerator
-    variables:   # syntax limitation - has to be here
+    variables:   # syntax limitation has to be here
       - group: ethans_secrets
     steps:
       - task: AzureCLI@2
