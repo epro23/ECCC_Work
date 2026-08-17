@@ -21,10 +21,12 @@ variables:
   storage_account: 'ecdcncisst'
   storage_container: 'ethan-resources'
   working_dir: 'DMS_ParamListGenerator'
-  group: ethans_secrets
+  # group: ethans_secrets
 
 jobs:
   - job: RunParamListGenerator
+    variables:   # syntax limitation - has to be here
+      - group: ethans_secrets
     steps:
       - task: AzureCLI@2
         displayName: 'Download resource from NCIS blob storage'
