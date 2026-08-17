@@ -85,7 +85,7 @@ if len(check_na) > 0:
 
 container_name = "ethan-resources"
 blob_name = f"{file_name.rsplit('.',1)[0]}_output.csv"
-connection_string = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
+connection_string = os.environ["MY_SECRET"]
 
 blob_client = BlobServiceClient.from_connection_string(conn_str=connection_string).get_blob_client(container=container_name, blob=blob_name)
 blob_client.upload_blob(target_merge.to_csv(index=False), overwrite=True)
