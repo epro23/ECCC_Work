@@ -17,10 +17,13 @@ parameters:
 
 pool: 'AgentPool_VmssUbuntu'
 
+
+
 variables:
   storage_account: 'ecdcncisst'
   storage_container: 'ethan-resources'
   working_dir: 'DMS_ParamListGenerator'
+  group: ethans_secrets
 
 jobs:
   - job: RunParamListGenerator
@@ -48,51 +51,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           python working_pipeline.py "${{ parameters.fileName }}" "${{ parameters.isStar }}"
-        displayName: 'Install dependencies and run script'
+        displayName: 'Install dependencies, run script, and upload output'
         workingDirectory: $(working_dir)
-
-      - bash: echo "##vso[task.setvariable variable=local_output_file]${FILE_NAME%.*}_output.csv"
-        displayName: 'Set local output file name'
         env:
-          FILE_NAME: ${{ parameters.fileName }}
-
-      - script: |
-          python -c "
-          import pandas as pd
-          vals = pd.read_csv('$(local_output_file)')['Unique parameter list values'].dropna().tolist()
-          print('\n'.join(str(v) for v in vals))
-          "
-        displayName: 'Showing unique parameter list values'
-        workingDirectory: $(working_dir)
-
-      - task: AzureCLI@2
-        displayName: 'Determine next available output blob name'
-        inputs:
-          azureSubscription: 'DevOpsServiceConnection_EcDc-NCIS-rg'
-          scriptType: 'bash'
-          scriptLocation: 'inlineScript'
-          inlineScript: |
-            base_name="${FILE_NAME%.*}_output"
-            candidate="${base_name}.csv"
-            i=1
-            while [ "$(az storage blob exists --account-name $(storage_account) --container-name $(storage_container) --name "$candidate" --query exists -o tsv)" = "True" ]; do
-              candidate="${base_name}${i}.csv"
-              i=$((i+1))
-            done
-            echo "##vso[task.setvariable variable=output_file]$candidate"
-        env:
-          FILE_NAME: ${{ parameters.fileName }}
-
-      - task: AzureCLI@2
-        displayName: 'Upload output to NCIS blob storage'
-        inputs:
-          azureSubscription: 'DevOpsServiceConnection_EcDc-NCIS-rg'
-          scriptType: 'bash'
-          scriptLocation: 'inlineScript'
-          workingDirectory: $(working_dir)
-          inlineScript: |
-            az storage blob upload \
-              --account-name $(storage_account) \
-              --container-name $(storage_container) \
-              --name "$(output_file)" \
-              --file "$(local_output_file)"
+          MY_SECRET: $(connections_string)
+          #AZURE_STORAGE_CONNECTION_STRING: $(StorageConnectionString)  # secret pipeline variable
