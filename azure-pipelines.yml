@@ -17,8 +17,6 @@ parameters:
 
 pool: 'AgentPool_VmssUbuntu'
 
-
-
 variables:
   storage_account: 'ecdcncisst'
   storage_container: 'ethan-resources'
