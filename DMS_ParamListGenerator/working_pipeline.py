@@ -1,5 +1,6 @@
 # loading...
 from pathlib import Path
+from azure.storage.blob import BlobServiceClient
 import pandas as pd, sys, os
 
 script_dir = Path(__file__).resolve().parent
@@ -74,11 +75,18 @@ target_merge = target_merge.merge(
 target_merge.drop(columns=["Parameter short name"], inplace=True)
 target_merge.rename(columns={"Name_x": "Parameter type code", "Name_y": "Parameter list value"}, inplace=True)
 unique_vals = sorted(target_merge["Parameter list value"].dropna().unique())
-target_merge["Unique parameter list values"] = pd.Series(unique_vals)
+print("Unique parameter list values:")
+print("\n".join(str(v) for v in unique_vals))
 
 # final NA check
 check_na = target_merge[target_merge.iloc[:, :4].isna().any(axis=1)]
 if len(check_na) > 0:
     print(f'Rows with NA values found: {check_na[["National_VMV_Code", "Parameter type code", "Parameter list value"]]}')
 
-target_merge.to_csv(f"{file_name.rsplit('.',1)[0]}_output.csv", index=False)
+container_name = "ethan-resources"
+blob_name = f"{file_name.rsplit('.',1)[0]}_output.csv"
+connection_string = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
+
+blob_client = BlobServiceClient.from_connection_string(conn_str=connection_string).get_blob_client(container=container_name, blob=blob_name)
+blob_client.upload_blob(target_merge.to_csv(index=False), overwrite=True)
+# target_merge.to_csv(f"{file_name.rsplit('.',1)[0]}_output.csv", index=False)
