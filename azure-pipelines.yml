@@ -17,10 +17,13 @@ parameters:
 
 pool: 'AgentPool_VmssUbuntu'
 
+
+
 variables:
   storage_account: 'ecdcncisst'
   storage_container: 'ethan-resources'
   working_dir: 'DMS_ParamListGenerator'
+  group: ethans_secrets
 
 jobs:
   - job: RunParamListGenerator
@@ -51,4 +54,5 @@ jobs:
         displayName: 'Install dependencies, run script, and upload output'
         workingDirectory: $(working_dir)
         env:
-          AZURE_STORAGE_CONNECTION_STRING: $(StorageConnectionString)  # secret pipeline variable
+          MY_SECRET: $(connections_string)
+          #AZURE_STORAGE_CONNECTION_STRING: $(StorageConnectionString)  # secret pipeline variable
