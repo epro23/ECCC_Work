@@ -52,5 +52,5 @@ jobs:
         displayName: 'Install dependencies, run script, and upload output'
         workingDirectory: $(working_dir)
         env:
-          MY_SECRET: $(connections_string)
+          MY_SECRET: $(connection_string)
           #AZURE_STORAGE_CONNECTION_STRING: $(StorageConnectionString)  # secret pipeline variable
