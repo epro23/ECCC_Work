@@ -55,4 +55,3 @@ jobs:
         workingDirectory: $(working_dir)
         env:
           MY_SECRET: $(connection_string)
-          #AZURE_STORAGE_CONNECTION_STRING: $(StorageConnectionString)  # secret pipeline variable
