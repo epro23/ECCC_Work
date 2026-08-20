@@ -10,7 +10,13 @@ sp_ref = pd.read_csv("mappings/REF_2026-08-04_SamplingParameters_Export.csv")
 pl_ref = pd.read_csv("mappings/REF_2026-08-04_ParameterLists_Export.csv")
 star_ref = pd.read_csv("mappings/REF_2026-04-14_STAR_Mapping.csv")
 file_name = input("Paste name of target file in root folder; e.g. = 'star_target.txt' : ")
-target = pd.read_csv(file_name, header=None, names=["CODE"])
+
+# column 1 must be VMVs
+target = pd.read_csv(file_name)
+# ensure only 1 column of VMVs
+if len(target) > 1:
+    target = target.drop(columns=target.columns[1:])
+target.columns.values[0] = "CODE"
 # keep only integer values (filters out any header row or non-numeric text)
 target = target[pd.to_numeric(target["CODE"], errors="coerce").notna()]
 target["CODE"] = target["CODE"].astype(int)
